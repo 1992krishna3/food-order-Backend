@@ -12,14 +12,15 @@ import bodyParser from "body-parser";
 import adminRouter from "./routes/v1/adminRoutes.js";
 
 
+const app = express();
 
 dotenv.config();
 
-const app = express();
+
 
 //Middleware to parse json bodies
 app.use(bodyParser.json());
-
+app.use(express.json());
 
 app.use(cors({
   origin: 'http://localhost:5173',

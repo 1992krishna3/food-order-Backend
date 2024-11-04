@@ -1,12 +1,13 @@
 import express from "express";
 import { createOrder, getOrders, getOrderById } from "../../controllers/orderController.js";
+import authMiddleware from "../../middleware/authMiddleware.js";
 
 
-const userRouter = express.Router();
+const orderRouter = express.Router();
 
 
-userRouter.post('/', createOrder);
-userRouter.get('/', getOrders);
-userRouter.get('/:id', getOrderById);
+orderRouter.post('/create',authMiddleware,createOrder);
+orderRouter.get('/', authMiddleware,getOrders);
+orderRouter.get('/:id', getOrderById);
 
-export default userRouter;
+export default orderRouter;

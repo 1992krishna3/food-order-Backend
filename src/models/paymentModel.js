@@ -1,21 +1,34 @@
 import mongoose from "mongoose";
 
+// Define the payment schema
 const paymentSchema = new mongoose.Schema({
-  razorpay_order_id: {
-    type: String,
-    required: true,
+  orderId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Order', // Reference to your Order model
+      required: true,
   },
-  razorpay_payment_id: {
-    type: String,
-    required: true,
+  amount: {
+      type: Number,
+      required: true,
   },
-  razorpay_signature: {
-    type: String,
-    required: true,
+  currency: {
+      type: String,
+      required: true,
+      default: 'INR', // Default currency
   },
-  date: {
-    type: Date,
-    default: Date.now,
+  paymentId: {
+      type: String,
+      required: true,
+      unique: true, // Unique payment ID from Razorpay
+  },
+  paymentStatus: {
+      type: String,
+      enum: ['pending', 'completed', 'failed'], // Define possible statuses
+      default: 'pending', // Default status
+  },
+  createdAt: {
+      type: Date,
+      default: Date.now, // Timestamp when payment is created
   },
 });
 

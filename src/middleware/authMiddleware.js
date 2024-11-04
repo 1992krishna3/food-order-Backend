@@ -9,20 +9,22 @@ export const authMiddleware = async (req, res, next) => {
 
  //Get token from header
   const token = req.header('Authorization')?.replace('Bearer ', '');
-
+  
   
   //Check if no token
   if (!token) {
     return res.status(401).json({ msg: 'No token, authorization denied' });
   }
-  console.log(token);
+  console.log('Received Token:', token);
   
   // Verify token
-    const decoded = jwt.verify(token, process.env.TOKEN_SECRET );
-    console.log('Decoded token:', decoded);    
+    const decoded = jwt.verify(token,process.env.TOKEN_SECRET );
+    console.log('Decoded token:', decoded);
+ 
 
     // Check if decoded contains the user object and its id
     if (!decoded ||!decoded.id) {
+      console.error(err);  
       return res.status(401).json({ msg: 'Token is invalid' });
     }
     req.user = decoded;
@@ -35,18 +37,10 @@ export const authMiddleware = async (req, res, next) => {
     }
     next();
 
-    const roleAuthorization = (allowedRoles) => {
-      return (req, res, next) => {
-          if (!allowedRoles.includes(req.user.role)) {
-              return res.status(403).json({ message: "Access denied: insufficient permissions" });
-          }
-          next();
-      };
-  };
-  
   } catch (err) {
     if (err.name === "TokenExpiredError") {
-      return res.status(401).json({ msg: "Token has expired" });
+      console.error('JWT Error:', err);
+      return res.status(401).json({ msg: "Token has expire" });
     } else if (err.name === "JsonWebTokenError") {
     res.status(401).json({ msg: 'Token is not valid' });
   } else {
@@ -54,4 +48,12 @@ export const authMiddleware = async (req, res, next) => {
 };
 }
 }
+const roleAuthorization = (allowedRoles) => {
+  return (req, res, next) => {
+      if (!allowedRoles.includes(req.user.role)) {
+          return res.status(403).json({ message: "Access denied: insufficient permissions" });
+      }
+      next();
+  };
+};
 export default authMiddleware;

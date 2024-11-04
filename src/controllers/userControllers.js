@@ -13,7 +13,7 @@ export const signup = async (req, res) => {
         return res.status(400).json({ message: "All fields are required" });
     }
     // Check if passwords match
-    if (password !== confirmPassword) {
+    if (password.trim() !== confirmPassword.trim()) {
       return res.status(400).json({ message: "Passwords do not match" });
   }
 
@@ -47,7 +47,12 @@ export const signup = async (req, res) => {
       // Generate token
       const token = generateToken(newUser._id,newUser.role);
       console.log('Generated Token:', token);
-    
+
+      // Store token in a cookie
+      res.cookie('token', token, {
+         httpOnly: true,
+      });
+
       res.status(201).json({message: "Signed successfully!",token});
     } catch (error) {
       console.log(error);
@@ -82,6 +87,11 @@ export const signup = async (req, res) => {
       // Generate JWT token
       const token = generateToken(user._id,user.role);
       console.log('Generated Token:', token)
+
+      // Store token in a cookie
+      res.cookie('token', token, {
+        httpOnly: true,
+     });
       
       res.status(201).json({message:"signin successful", token});
     } catch (error) {
@@ -90,12 +100,58 @@ export const signup = async (req, res) => {
     }
   };
 
-  
+  // Get User Profile
+export const getUserProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password');
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+};
+
+// User Logout
+export const logout = (req, res) => {
+  res.status(200).json({ message: 'Logged out successfully' });
+};
+
+// Update User
+export const updateUser = async (req, res) => {
+  try {
+    const { firstName, lastName, email } = req.body;
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { firstName, lastName, email },
+      { new: true }
+    ).select('-password');
+
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+};
+//check user
+export const checkUser = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+
+    if (user) return res.status(200).json({ exists: true });
+    res.status(200).json({ exists: false });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+};
 
 const userController = {
   signup,
   signin,
-  
+  getUserProfile,
+  logout,
+  updateUser,
+  checkUser
 };
 
 export default userController;

@@ -1,10 +1,14 @@
 import express from "express";
-import {signup, signin, } from "../../controllers/userControllers.js";
-
+import {signup, signin, getUserProfile, logout, updateUser, checkUser, } from "../../controllers/userControllers.js";
+import authMiddleware from "../../middleware/authMiddleware.js";
 
 const userRouter = express.Router();
 
 userRouter.post("/signup", signup);
 userRouter.post("/signin", signin );
+userRouter.get("/profile", authMiddleware, getUserProfile);
+userRouter.post("/logout",logout);
+userRouter.post("/update", authMiddleware, updateUser);
+userRouter.post("/checkuser",checkUser);
 
 export default userRouter;
