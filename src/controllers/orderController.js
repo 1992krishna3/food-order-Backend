@@ -1,7 +1,5 @@
 import Order from "../models/orderModel.js";
-import dotenv from 'dotenv';
 import Razorpay from "razorpay";
-import User from "../models/userModel.js";
 
 // Create a new order
 export const createOrder = async (req, res) => {
