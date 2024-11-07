@@ -19,7 +19,7 @@ dotenv.config();
 
 
 //Middleware to parse json bodies
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 app.use(express.json());
 
 app.use(cors({

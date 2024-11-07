@@ -1,5 +1,6 @@
 import Order from "../models/orderModel.js";
 import Razorpay from "razorpay";
+import mongoose from "mongoose"; 
 
 // Create a new order
 export const createOrder = async (req, res) => {
@@ -13,6 +14,10 @@ export const createOrder = async (req, res) => {
           return res.status(400).json({ success: false, message: "No items provided" });
       }
 
+// Log incoming items for debugging
+console.log("Incoming items:", items);
+
+ 
       // Create the order
       const newOrder = new Order({
           userId,
