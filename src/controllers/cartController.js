@@ -11,7 +11,9 @@ export const addItemToCart = async (req, res) => {
     const userId = req.user.id;
 
     if (!foodId) {
-      return res.status(400).json({ success: false, message: "food ID is required" });
+      return res
+        .status(400)
+        .json({ success: false, message: "food ID is required" });
     }
 
     // Check if userId is provided
@@ -22,9 +24,8 @@ export const addItemToCart = async (req, res) => {
         .json({ success: false, message: "User ID not found" });
     }
 
-    
     console.log(`User ID from token: ${userId}`);
-    
+
     // Find user by ID
     let userData = await userModel.findById(userId);
     console.log("Fetched user data:", userData);
@@ -114,7 +115,7 @@ export const getCart = async (req, res) => {
     res.json({ success: true, cartData });
   } catch (error) {
     console.log(error);
-    res.json(500).json({ success: false, message: "Error" });
+    res.status(500).json({ success: false, message: "Error" });
   }
 };
 

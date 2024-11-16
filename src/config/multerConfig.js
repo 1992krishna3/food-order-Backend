@@ -1,12 +1,12 @@
 import multer from "multer";
-import { CloudinaryStorage } from 'multer-storage-cloudinary';
-import cloudinary from './cloudinaryConfig.js';
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+import cloudinary from "./cloudinaryConfig.js";
 
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: 'food_images',
-    allowed_formats: ['jpg', 'jpeg', 'png'],
+    folder: "food_images",
+    allowed_formats: ["jpg", "jpeg", "png"],
   },
 });
 

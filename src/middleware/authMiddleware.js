@@ -5,27 +5,24 @@ import User from "../models/userModel.js";
 dotenv.config();
 
 export const authMiddleware = async (req, res, next) => {
- try {
+  try {
+    //Get token from header
+    const token = req.header("Authorization")?.replace("Bearer ", "");
 
- //Get token from header
-  const token = req.header('Authorization')?.replace('Bearer ', '');
-  
-  
-  //Check if no token
-  if (!token) {
-    return res.status(401).json({ msg: 'No token, authorization denied' });
-  }
-  console.log('Received Token:', token);
-  
-  // Verify token
-    const decoded = jwt.verify(token,process.env.TOKEN_SECRET );
-    console.log('Decoded token:', decoded);
- 
+    //Check if no token
+    if (!token) {
+      return res.status(401).json({ msg: "No token, authorization denied" });
+    }
+    console.log("Received Token:", token);
+
+    // Verify token
+    const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
+    console.log("Decoded token:", decoded);
 
     // Check if decoded contains the user object and its id
-    if (!decoded ||!decoded.id) {
-      console.error(err);  
-      return res.status(401).json({ msg: 'Token is invalid' });
+    if (!decoded || !decoded.id) {
+      console.error(err);
+      return res.status(401).json({ msg: "Token is invalid" });
     }
     req.user = decoded;
 
@@ -33,27 +30,28 @@ export const authMiddleware = async (req, res, next) => {
     const user = await User.findById(req.user.id);
 
     if (!user) {
-      return res.status(404).json({ msg: 'User not found' });
+      return res.status(404).json({ msg: "User not found" });
     }
     next();
-
   } catch (err) {
     if (err.name === "TokenExpiredError") {
-      console.error('JWT Error:', err);
+      console.error("JWT Error:", err);
       return res.status(401).json({ msg: "Token has expire" });
     } else if (err.name === "JsonWebTokenError") {
-    res.status(401).json({ msg: 'Token is not valid' });
-  } else {
-    return res.status(500).json({ msg: "Server error" });
+      res.status(401).json({ msg: "Token is not valid" });
+    } else {
+      return res.status(500).json({ msg: "Server error" });
+    }
+  }
 };
-}
-}
 const roleAuthorization = (allowedRoles) => {
   return (req, res, next) => {
-      if (!allowedRoles.includes(req.user.role)) {
-          return res.status(403).json({ message: "Access denied: insufficient permissions" });
-      }
-      next();
+    if (!allowedRoles.includes(req.user.role)) {
+      return res
+        .status(403)
+        .json({ message: "Access denied: insufficient permissions" });
+    }
+    next();
   };
 };
 export default authMiddleware;
