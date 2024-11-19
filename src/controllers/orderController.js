@@ -117,14 +117,14 @@ export const verifyOrder = async (req, res) => {
 
     if (success === "true" || success === true) {
       await orderModel.findByIdAndUpdate(orderId, { payment: true });
-      return res.status({ success: true, message: "Paid" });
+      return res.status(200)({ success: true, message: "Paid" });
     } else {
       await orderModel.findByIdAndDelete(orderId);
-      return res.status({ success: false, message: "Not Paid" });
+      return res.status(200)({ success: false, message: "Not Paid" });
     }
   } catch (error) {
     console.log(error);
-    return res.status({ success: false, message: "Error" });
+    return res.status(500)({ success: false, message: "Error" });
   }
 };
 
