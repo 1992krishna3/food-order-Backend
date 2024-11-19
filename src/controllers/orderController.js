@@ -111,7 +111,7 @@ export const verifyOrder = async (req, res) => {
   console.log("Verifying Order:", { orderId, success });
 
   try {
-    if (success === true || success === "true") {
+    if (success === "true" || success === true) {
       await orderModel.findByIdAndUpdate(orderId, { payment: true });
       res.json({ success: true, message: "Paid" });
     } else {

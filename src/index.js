@@ -14,30 +14,39 @@ const app = express();
 
 dotenv.config();
 
+
+
 //Middleware to parse json bodies
 app.use(bodyParser.json());
 app.use(express.json());
 
 // Allowed origins
-const allowedOrigins = ["https://incandescent-beijinho-0e58b0.netlify.app", "http://localhost:5174"];
+const allowedOrigins = ["https://capstone-foodorderdelivery-project.netlify.app"];
 
-// CORS options
+// CORS options configuration
 const corsOptions = {
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error("Not allowed by CORS"));
+       callback(new Error("Not allowed by CORS"));
     }
   },
-
-  methods: ["GET", "POST", "PUT", "DELETE","OPTIONS"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
 };
 
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions));
+
+// Handle preflight (OPTIONS) requests
+app.options("*", (req, res) => {
+  res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.sendStatus(204); // No content
+});
 
 //Define Routes
 app.use("/api/v1/users", userRouter);
@@ -47,11 +56,13 @@ app.use("/api/v1/foods", foodRoutes);
 app.use("/api/cart", cartRouter);
 app.use("/api/admin", adminRouter);
 
+
 // Sample route
 app.get("/", (req, res) => {
   res.send("Welcome to the Food Order App");
 });
 
+const port = serverConfig.Port || 3000;
 app.listen(serverConfig.Port, () => {
   console.log(`Example app listening on port ${serverConfig.Port}`);
   dbConnect();
