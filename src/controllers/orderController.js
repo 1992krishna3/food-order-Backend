@@ -111,16 +111,20 @@ export const verifyOrder = async (req, res) => {
   console.log("Verifying Order:", { orderId, success });
 
   try {
+    if (!orderId) {
+      return res.status(400).json({ success: false, message: "Order ID is required." });
+    }
+
     if (success === "true" || success === true) {
       await orderModel.findByIdAndUpdate(orderId, { payment: true });
-      res.json({ success: true, message: "Paid" });
+      return res.status({ success: true, message: "Paid" });
     } else {
       await orderModel.findByIdAndDelete(orderId);
-      res.json({ success: false, message: "Not Paid" });
+      return res.status({ success: false, message: "Not Paid" });
     }
   } catch (error) {
     console.log(error);
-    res.json({ success: false, message: "Error" });
+    return res.status({ success: false, message: "Error" });
   }
 };
 
