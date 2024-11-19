@@ -107,7 +107,7 @@ export const placeOrder = async (req, res) => {
 };
 //To verify order
 export const verifyOrder = async (req, res) => {
-  const { orderId, success } = req.body;
+  const { orderId, success } = req.query;
   console.log("Verifying Order:", { orderId, success });
 
   try {
