@@ -21,7 +21,8 @@ app.use(bodyParser.json());
 app.use(express.json());
 
 // Allowed origins
-const allowedOrigins = ["https://capstone-foodorderdelivery-project.netlify.app"];
+const allowedOrigins = ["https://capstone-foodorderdelivery-project.netlify.app"]
+
 
 // CORS options configuration
 const corsOptions = {
@@ -35,18 +36,15 @@ const corsOptions = {
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
+  preflightContinue: false,  // Handle preflight requests
+  optionsSuccessStatus: 204,  
 };
+
 
 app.use(cors(corsOptions));
 
-// Handle preflight (OPTIONS) requests
-app.options("*", (req, res) => {
-  res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.sendStatus(204); // No content
-});
+app.options("*", cors(corsOptions));
+
 
 //Define Routes
 app.use("/api/v1/users", userRouter);
