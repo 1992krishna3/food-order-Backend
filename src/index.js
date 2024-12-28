@@ -20,31 +20,22 @@ dotenv.config();
 app.use(bodyParser.json());
 app.use(express.json());
 
-// Allowed origins
-const allowedOrigins = ["https://capstone-foodorderdelivery-project.netlify.app"]
+// CORS configuration
+const allowedOrigins = [
+  "https://capstone-foodorderdelivery-project.netlify.app",
+  "http://localhost:5173",
+];
 
-
-// CORS options configuration
-const corsOptions = {
+app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (allowedOrigins.includes(origin) || !origin) {
       callback(null, true);
     } else {
-       callback(new Error("Not allowed by CORS"));
+      callback(new Error('Not allowed by CORS'));
     }
   },
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true,
-  preflightContinue: false,  // Handle preflight requests
-  optionsSuccessStatus: 204,  
-};
-
-
-app.use(cors(corsOptions));
-
-app.options("*", cors(corsOptions));
-
+  withCredentials: true,
+})); 
 
 //Define Routes
 app.use("/api/v1/users", userRouter);
@@ -66,3 +57,4 @@ app.listen(serverConfig.Port, () => {
   dbConnect();
   console.log("Db connected");
 });
+  
