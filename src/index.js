@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import serverConfig from "./config/serverConfig.js";
 import dbConnect from "./config/dbConfig.js";
-import orderRouter from "./routes/v1/orderRoutes.js";
+import orderRoutes from "./routes/v1/orderRoutes.js";
 import userRouter from "./routes/v1/userRoutes.js";
 import foodRoutes from "./routes/v1/foodRoutes.js";
 import cartRouter from "./routes/cartRoutes.js";
@@ -54,7 +54,7 @@ app.use((req, res, next) => {
 
 //Define Routes
 app.use("/api/v1/users", userRouter);
-app.use("/api/v1/order", orderRouter);
+app.use("/api/v1/order", orderRoutes);
 app.use("/api/v1/foods", foodRoutes);
 
 app.use("/api/cart", cartRouter);
