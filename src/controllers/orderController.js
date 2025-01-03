@@ -6,7 +6,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 //placing user order for frontend
 export const placeOrder = async (req, res) => {
-  const frontend_url = "https://food-order-backend-5.onrender.com/api/v1/order";
+  const frontend_url = "https://food-order-backend-5.onrender.com";
 
   console.log("Received Order Data:", req.body);
   const { userId, address, items, amount } = req.body;
