@@ -117,7 +117,7 @@ export const placeOrder = async (req, res) => {
     res.json({ success: true, session_url: session.url });
   } catch (error) {
     console.error("Error placing order:", error.message, error.stack);
-    res.status(500).json({ success: false, message: "Error" });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 //To verify order
