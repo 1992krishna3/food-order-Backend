@@ -3,10 +3,11 @@ import userModel from "../models/userModel.js";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const frontend_url=process.env.FRONTEND_URL
 
 //placing user order for frontend
 export const placeOrder = async (req, res) => {
-  const frontend_url = "https://food-order-backend-5.onrender.com";
+  
 
   console.log("Received Order Data:", req.body);
   const { userId, address, items, amount } = req.body;
