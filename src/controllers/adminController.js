@@ -2,6 +2,39 @@ import User from "../models/userModel.js";
 import Order from "../models/orderModel.js";
 import Food from "../models/foodModel.js";
 
+
+// Admin Signup
+export const adminSignup = async (req, res) => {
+  try {
+    const { firstName, lastName, email, password } = req.body;
+
+    // Check if the admin already exists
+    const existingAdmin = await Admin.findOne({ email });
+    if (existingAdmin) {
+      return res.status(400).json({ message: 'Admin already exists.' });
+    }
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create a new admin
+    const newAdmin = new Admin({
+      firstName,
+      lastName,
+      email,
+      password: hashedPassword,
+    });
+
+    // Save the admin to the database
+    await newAdmin.save();
+    res.status(201).json({ message: 'Admin registered successfully.' });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error.', error });
+  }
+};
+
+
+
 // Fetch all users
 export const getAllUsers = async (req, res) => {
   try {

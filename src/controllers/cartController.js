@@ -2,6 +2,8 @@ import Cart from "../models/cartModel.js";
 import userModel from "../models/userModel.js";
 import Food from "../models/foodModel.js";
 
+
+
 //Add item to cart
 export const addItemToCart = async (req, res) => {
   try {

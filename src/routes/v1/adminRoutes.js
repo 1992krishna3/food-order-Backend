@@ -7,11 +7,14 @@ import {
   updateOrderStatus,
   updateFoodItem,
   deleteFoodItem,
+  adminSignup,
 } from "../../controllers/adminController.js";
 
 const adminRouter = express.Router();
 
 // Admin-only routes
+adminRouter.post('/signup', adminSignup);
+
 adminRouter.get("/users", getAllUsers); // Fetch all users
 adminRouter.delete("/user/:id", deleteUser); // Delete a user
 adminRouter.get("/orders", adminMiddleware, getAllOrders); // Fetch all orders
