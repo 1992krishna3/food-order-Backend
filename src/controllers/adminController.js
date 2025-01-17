@@ -1,19 +1,22 @@
 import User from "../models/userModel.js";
 import Order from "../models/orderModel.js";
 import Food from "../models/foodModel.js";
+import Admin from '../models/adminModel.js';
+import bcrypt from 'bcrypt';
 
 
 // Admin Signup
 export const adminSignup = async (req, res) => {
   try {
-    const { firstName, lastName, email, password } = req.body;
+    console.log("Request received:", req.body);
+    const { firstName,lastName, email, password } = req.body;
 
-    // Check if the admin already exists
+   // Check if the admin already exists
     const existingAdmin = await Admin.findOne({ email });
     if (existingAdmin) {
+      console.log("Admin exists");
       return res.status(400).json({ message: 'Admin already exists.' });
     }
-
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -24,13 +27,27 @@ export const adminSignup = async (req, res) => {
       email,
       password: hashedPassword,
     });
-
-    // Save the admin to the database
+   // Save the admin to the database
     await newAdmin.save();
-    res.status(201).json({ message: 'Admin registered successfully.' });
+    console.log("New admin created:", newAdmin);
+      // Return success response
+      res.status(201).json({
+        success: true,
+        message: "Admin registered successfully.",
+        data: {
+          id: newAdmin._id,
+          email: newAdmin.email,
+        },
+      });
   } catch (error) {
-    res.status(500).json({ message: 'Server error.', error });
-  }
+    console.error("Error during admin signup:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error occurred. Please try again later.",
+      error: error.message,
+    });
+  }  
+  
 };
 
 
@@ -122,6 +139,7 @@ export const deleteFoodItem = async (req, res) => {
 };
 
 const adminController = {
+  adminSignup,
   getAllUsers,
   deleteUser,
   getAllOrders,

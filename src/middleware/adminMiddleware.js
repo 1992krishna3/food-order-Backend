@@ -1,5 +1,9 @@
 import jwt from "jsonwebtoken";
 import User from "../models/userModel.js";
+import dotenv from "dotenv";
+
+dotenv.config();
+
 
 // Middleware to check if the user is an admin
 const adminMiddleware = async (req, res, next) => {
